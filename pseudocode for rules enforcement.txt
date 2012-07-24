@@ -1,0 +1,39 @@
+player k just went at (x1 y1 x2 y2 x3 y3 ... xn yn)
+
+if (x1 y1).(x2 y2) is won:
+	if 
+	x'1 = x2
+	y'1 = y2
+
+else:
+	x'1 = x1
+	y'1 = y1
+	
+if (x1 y1).(x2 y2).(x3 y3) is won:
+	x'2 = x'3
+	y'2 = y'3
+
+else:
+	x'2 = x2
+	y'2 = y2
+....
+
+if (x1 y1).(x2 y2)...(xn-1 yn-1) is won:
+	x'n-1 = xn
+	y'n-1 = yn
+
+else:
+	x'n-1 = xn-1
+	y'n-1 = yn-1
+	
+	x'n = [0-2]
+	x'n = [0-2]
+
+player k+1 attempts a move at (xi1 yi1 xi2 yi2 ...xin yin)
+
+for i in range(n):
+	(xi1 yi1) == (x'1 y'1) or (x'1 y'1).state==player[k]
+	(xi2 yi2) == (x'2 y'2) or (xi1 yi1).(x'2 y'2).state == player[k]
+	(xi3 yi3) == (x'3 y'3) or (xi1 yi1).(xi2 yi2).(x'3 y'3).state == player[k]
+	...
+	(xin-1 yin-1) == (x'n-1 y'n-1) or (xi1 yi1)...(xin-2 yin-2).(xn-1 yn-1).state == player[k]
