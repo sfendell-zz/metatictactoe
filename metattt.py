@@ -6,53 +6,74 @@ def nextPlayer(player):
 
 class Board(object):
 	"""represents a n-dimensional board object"""
-	
+
 	def __init__(self, dimension, size, parent=None, pos=None):
 		self.dimension = dimension
 		self.size = size
-		self.state = -1
+		self.state = -1 #indicates an unwon square
 		self.parent = parent
 		self.pos = pos
-		if dimension>0:
+		if dimension>0: #recursively generate child boards
 			self.children = [[Board(dimension-1,size,self,(row,col)) for col in range(size)] for row in range(size)]
-			
+
 	"""Takes in player (one letter from the player array) and 2*dimension arguments representing a 0-d square on the board, places the 
 	correct marking there, then updates all the children's states correctly and checks if that move wins the game"""
 	def move(self, player, *args):
-		if len(args)!=self.dimension:
+		if len(args)!=self.dimension: #args is a tuple of tuples, each of which specifies coordinates in a board
 			raise Exception('move has wrong number of indices: should be %s, is %s' % (self.dimension, len(args))) #should never be thrown
 		if self.state != -1:
 			raise Exception('square of dimension %s has already been won!' % self.dimension)
+		print '%s is the dimension this is getting to\n' % self.dimension
 		if self.dimension==0:
 			self.state=player
-			self.parent.checkwin(player,self.row,self.col)
+			return self.parent.checkwin(player,self.pos)
 		else:
-			self.children[args[0][0]][args[0][1]].move(player,*args[1:])
-			
-	"""After player wins the (row, col) box of the board, check if the board has been won, set state appropriately, and alert its parent"""
-	def checkwin(self,player,coord):
-		row = coord[0]
-		col = coord[1]
+			return self.children[args[0][0]][args[0][1]].move(player,*args[1:])
+
+	"""After player wins the pos box of the board, check if the board has been won, set state appropriately, and alert its parent.
+		Return the max dimension won by the play (minimum 1, maximum [dimension])"""
+	def checkwin(self,player,pos):
 		children = self.children
 		parent = self.parent
 		size = self.size
-		won = True
-		if ([children[row][i].state for i in range(size)].count(player)==size or
-		[children[i][col].state for i in range(size)].count(player)==size or
-		(row == col and [children[i][i].state for i in range(size)].count(player)==size) or
-		(row+col==size-1 and [children[i][size-1-i].state for i in range(size)].count(player)==size)):
+		if (self.dimension == 0 or
+		[children[pos[0]][i].state for i in range(size)].count(player)==size or #winning in a column
+		[children[i][pos[1]].state for i in range(size)].count(player)==size or #winning in a row
+		(pos[0] == pos[1] and [children[i][i].state for i in range(size)].count(player)==size) or #winning in diagonal (topleft to bottomright)
+		(pos[0] + pos[1] ==size-1 and [children[i][size-1-i].state for i in range(size)].count(player)==size)): #winning in cross diagonal
 			self.state = player
-			if parent is None:
-				return player
-			parent.checkwin(player,self.row,self.col)
+			return 1+((parent != None) and parent.checkwin(player,self.pos))
+		else: #no win indicates that this is the end of the line for the chain of wins
+			return 0
 
-	def genrule(self, *args)
+	"""Produces a rule based on the last turn played that the next turn must match"""
+	def genrule(self, level, turn):
 		if len(args)!=self.dimension:
 			raise Exception('move has wrong number of indices: should be %s, is %s' % (self.dimension, len(args))) #should never be thrown
-		if self.children(
+		return args[:-level-1] + args[-level:] + ('x','x')
+	
+	"""Match a turn to a rule produced by genrule"""
+	def matchrule(self, rule, turn):
+		
+		
+		
+		
+"""
+class Turn(object):
+	Object representing a turn; basically just a tuple with n 
+	nested tuples of size 2, each entry between 0 and [size]
+	def __init__(size,dim):
+		self.size=size
+		self.turntuple = ((),)*dim
+	
+	def set(level, pos):
+		if len(pos)!=size:
+			raise Exception('turn
+		self.turntuple[level] = pos
 
-			
-
+	def get(level):
+		return self.turntuple[level]
+"""
 def startmessage():
 	print 'Welcome to funtimes metatictactoe'
 	print 'Size?:'

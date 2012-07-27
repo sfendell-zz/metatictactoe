@@ -1,5 +1,8 @@
 player k just went at (x1 y1 x2 y2 x3 y3 ... xn yn)
 
+follow ifelses are incorrect
+tuple above last won level is deleted, all lower ones are shifted over
+
 if (x1 y1).(x2 y2) is won:
 	if 
 	x'1 = x2
