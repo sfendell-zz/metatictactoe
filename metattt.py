@@ -18,9 +18,9 @@ class Board(object):
 
 	"""Takes in player (one letter from the player array) and 2*dimension arguments representing a 0-d square on the board, places the 
 	correct marking there, then updates all the children's states correctly and checks if that move wins the game"""
-	def move(self, player, *args):
-		if len(args)!=self.dimension: #args is a tuple of tuples, each of which specifies coordinates in a board
-			raise Exception('move has wrong number of indices: should be %s, is %s' % (self.dimension, len(args))) #should never be thrown
+	def move(self, player, turn):
+		if len(turn)!=self.dimension: #turn is a tuple of tuples, each of which specifies coordinates in a board
+			raise Exception('move has wrong number of indices: should be %s, is %s' % (self.dimension, len(turn))) #should never be thrown
 		if self.state != -1:
 			raise Exception('square of dimension %s has already been won!' % self.dimension)
 		print '%s is the dimension this is getting to\n' % self.dimension
@@ -28,7 +28,7 @@ class Board(object):
 			self.state=player
 			return self.parent.checkwin(player,self.pos)
 		else:
-			return self.children[args[0][0]][args[0][1]].move(player,*args[1:])
+			return self.children[turn[0][0]][turn[0][1]].move(player,*turn[1:])
 
 	"""After player wins the pos box of the board, check if the board has been won, set state appropriately, and alert its parent.
 		Return the max dimension won by the play (minimum 1, maximum [dimension])"""
@@ -48,9 +48,9 @@ class Board(object):
 
 	"""Produces a rule based on the last turn played that the next turn must match"""
 	def genrule(self, level, turn):
-		if len(args)!=self.dimension:
-			raise Exception('move has wrong number of indices: should be %s, is %s' % (self.dimension, len(args))) #should never be thrown
-		return args[:-level-1] + args[-level:] + ('x','x')
+		if len(turn)!=self.dimension:
+			raise Exception('move has wrong number of indices: should be %s, is %s' % (self.dimension, len(turn))) #should never be thrown
+		return turn[:-level-1] + turn[-level:] + ('x','x')
 	
 	"""Match a turn to a rule produced by genrule"""
 	def matchrule(self, rule, turn):
@@ -58,7 +58,7 @@ class Board(object):
 			if rule==():
 				return True
 			else:
-				throw Exception('Turn is empty but rule is not!')
+				raise Exception('Turn is empty but rule is not!')
 		nextboard = self.children[turn[0][0]][turn[0][1]]
 		if turn[0]==rule[0] or nextboard.state!=-1:
 			nextboard.matchrule(rule[1:], turn[1:])
@@ -82,7 +82,8 @@ class Turn(object):
 def startmessage():
 	print 'Welcome to funtimes metatictactoe'
 	print 'Size?:'
-	
+
+def 
 			
 if __name__ == "__main__":
 	(dim,size) = startmessage()
@@ -90,3 +91,4 @@ if __name__ == "__main__":
 	playgame(Board(dim, size))
 
 def playgame(board, lastplayer='O',lastturn=None)
+	print 'Where would you like to go, player %s?:' % 
