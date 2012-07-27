@@ -54,10 +54,15 @@ class Board(object):
 	
 	"""Match a turn to a rule produced by genrule"""
 	def matchrule(self, rule, turn):
-		
-		
-		
-		
+		if turn==():
+			if rule==():
+				return True
+			else:
+				throw Exception('Turn is empty but rule is not!')
+		nextboard = self.children[turn[0][0]][turn[0][1]]
+		if turn[0]==rule[0] or nextboard.state!=-1:
+			nextboard.matchrule(rule[1:], turn[1:])
+
 """
 class Turn(object):
 	Object representing a turn; basically just a tuple with n 
