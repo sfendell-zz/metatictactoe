@@ -1,4 +1,4 @@
-
+from random import randint
 players = ['X','O']
 numPlayers = len(players)
 def nextPlayer(player):
@@ -62,7 +62,13 @@ class Board(object):
 		nextboard = self.children[turn[0][0]][turn[0][1]]
 		if turn[0]==rule[0] or nextboard.state!=-1:
 			nextboard.matchrule(rule[1:], turn[1:])
-
+    
+    """Produces a random turn for this board. Only for debugging"""
+    def __randturn(self):
+        a = ((),)
+        for i in range(self.dimension):
+            a = a + (randint(0,self.size),randint(0,self.size))
+        return a
 """
 class Turn(object):
 	Object representing a turn; basically just a tuple with n 
